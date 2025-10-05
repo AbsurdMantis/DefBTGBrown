@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using DefBTGBrown.ViewModels;
+using DefBTGBrown.Views;
+using Microsoft.Extensions.Logging;
 
 namespace DefBTGBrown
 {
@@ -16,8 +18,10 @@ namespace DefBTGBrown
                 });
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
+            builder.Services.AddTransient<MainViewModel>();
+            builder.Services.AddSingleton<GraphicsViewPage>();
 
             return builder.Build();
         }
