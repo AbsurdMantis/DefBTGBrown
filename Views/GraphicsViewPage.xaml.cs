@@ -1,6 +1,7 @@
 using DefBTGBrown.ViewModels;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
+using System.Collections.Specialized;
 
 namespace DefBTGBrown.Views;
 
@@ -12,6 +13,23 @@ public partial class GraphicsViewPage : ContentPage
         ViewModel = viewModel;
         BindingContext = viewModel;
         InitializeComponent();
+        this.Loaded += OnPageLoaded;
+    }
+
+    //Nota: forçando a UI a dar um refresh porque o skia não trigga sua renderização automaticamente no canvas
+    private void OnPageLoaded(object? sender, EventArgs e)
+    {
+        if (ViewModel != null)
+        {
+            ViewModel.Components.CollectionChanged += OnComponentsCollectionChanged;
+        }
+
+        skiaCanvas.InvalidateSurface();
+    }
+
+    private void OnComponentsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        skiaCanvas.InvalidateSurface();
     }
 
     private void ChartView_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
