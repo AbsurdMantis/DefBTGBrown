@@ -4,11 +4,12 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:DefBTGBrown"
+    xmlns:views="clr-namespace:DefBTGBrown.Views"
     Title="DefBTGBrown">
 
     <ShellContent
         Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
+        ContentTemplate="{DataTemplate views:GraphicsViewPage}"
         Route="GraphicsViewPage" />
 
 </Shell>

@@ -1,6 +1,7 @@
 ﻿using DefBTGBrown.ViewModels;
 using DefBTGBrown.Views;
 using Microsoft.Extensions.Logging;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace DefBTGBrown
 {
@@ -11,6 +12,7 @@ namespace DefBTGBrown
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseSkiaSharp()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -20,7 +22,7 @@ namespace DefBTGBrown
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
-            builder.Services.AddTransient<MainViewModel>();
+            builder.Services.AddSingleton<MainViewModel>();
             builder.Services.AddSingleton<GraphicsViewPage>();
 
             return builder.Build();
