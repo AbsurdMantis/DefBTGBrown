@@ -6,7 +6,8 @@
     xmlns:models="clr-namespace:DefBTGBrown.Models"
     xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
     xmlns:viewmodel="clr-namespace:DefBTGBrown.ViewModels"
-    Title="GraphicsViewPage">
+    Title="GraphicsViewPage"
+    Shell.NavBarIsVisible="False">
     <Grid
         x:Name="GridPrincipal"
         ColumnDefinitions="6*, 4*"

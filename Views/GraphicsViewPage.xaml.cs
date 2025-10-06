@@ -1,3 +1,4 @@
+using DefBTGBrown.Helpers;
 using DefBTGBrown.ViewModels;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
@@ -34,50 +35,61 @@ public partial class GraphicsViewPage : ContentPage
 
     private void ChartView_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
     {
+        var canvas = e.Surface.Canvas;
+        canvas.Clear(SKColors.White);
 
-        if (ViewModel?.Components == null || !ViewModel.Components.Any())
+        if (ViewModel?.Components is null || !ViewModel.Components.Any())
         {
-            e.Surface.Canvas.Clear();
             return;
         }
 
-        var surface = e.Surface;
-        var canvas = surface.Canvas;
-        canvas.Clear(SKColors.LightGray);
-        var height = e.Info.Height;
-        var width = e.Info.Width;
+        float padding = 60;
 
+        var chartArea = new SKRect(
+            left: padding,
+            top: padding / 2,
+            right: e.Info.Width - padding / 2,
+            bottom: e.Info.Height - padding);
+
+        float minPrice = ViewModel.Components.SelectMany(c => c.Values).Min(v => (float)v);
+        float maxPrice = ViewModel.Components.SelectMany(c => c.Values).Max(v => (float)v);
+        int maxTime = ViewModel.Components.Max(c => c.Time);
+
+        minPrice *= 0.95f;
+        maxPrice *= 1.05f;
+
+        ChartLabelHelper.DrawAxes(canvas, chartArea);
+        DrawGraphLines(canvas, chartArea, minPrice, maxPrice, maxTime);
+        ChartLabelHelper.DrawAxisLabels(canvas, chartArea, minPrice, maxPrice, maxTime);
+    }
+
+    private void DrawGraphLines(SKCanvas canvas, SKRect chartArea, float minPrice, float maxPrice, int maxTime)
+    {
         foreach (var item in ViewModel.Components)
         {
-
-            if (item.Values is null || item.Values.Length == 0)
-            {
-                continue;
-            }
-
-            var graphLinePaint = new SKPaint
+            using var graphPaint = new SKPaint
             {
                 Color = item.Color,
                 StrokeWidth = 2,
                 IsAntialias = true
             };
 
-            var maxValue = (float)item.Values.Max();
-
             for (int i = 0; i < item.Values.Length - 1; i++)
             {
                 var fromPoint = new SKPoint(
-                    ViewModel.XPoint(i, width, item.Values.Length),
-                    ViewModel.YPoint(height, (float)item.Values[i], maxValue)
+                    ValueMapHelper.XPoint(i, maxTime, chartArea),
+                    ValueMapHelper.YPoint((float)item.Values[i], minPrice, maxPrice, chartArea)
                 );
 
                 var toPoint = new SKPoint(
-                    ViewModel.XPoint(i + 1, width, item.Values.Length),
-                    ViewModel.YPoint(height, (float)item.Values[i + 1], maxValue)
+                    ValueMapHelper.XPoint(i + 1, maxTime, chartArea),
+                    ValueMapHelper.YPoint((float)item.Values[i + 1], minPrice, maxPrice, chartArea)
                 );
 
-                canvas.DrawLine(fromPoint, toPoint, graphLinePaint);
+                canvas.DrawLine(fromPoint, toPoint, graphPaint);
             }
         }
     }
+
+
 }

@@ -1,4 +1,5 @@
-﻿using DefBTGBrown.ViewModels;
+﻿using CommunityToolkit.Maui;
+using DefBTGBrown.ViewModels;
 using DefBTGBrown.Views;
 using Microsoft.Extensions.Logging;
 using SkiaSharp.Views.Maui.Controls.Hosting;
@@ -12,6 +13,7 @@ namespace DefBTGBrown
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .UseSkiaSharp()
                 .ConfigureFonts(fonts =>
                 {
